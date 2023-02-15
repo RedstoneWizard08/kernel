@@ -1,3 +1,3 @@
-# kernel
+# DESK
 
-A custom multiplatform kernel, written in Rust.
+A fast multiplatform kernel, written in Rust.
