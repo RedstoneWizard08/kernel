@@ -1,8 +1,7 @@
 package main
 
 import (
-	"fmt"
-
+	"github.com/RedstoneWizard08/kernel/tools/builder/clean"
 	"github.com/alexflint/go-arg"
 )
 
@@ -66,7 +65,8 @@ func main() {
 	arg.MustParse(&args)
 
 	switch {
-	case args.Test != nil:
-		fmt.Println("Test")
+	case args.Clean != nil:
+		clean.Setup()
+		clean.Clean()
 	}
 }
