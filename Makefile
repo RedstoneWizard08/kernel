@@ -39,7 +39,7 @@ ifeq ($(BSP),rpi3)
     TARGET            = aarch64-unknown-none-softfloat
     KERNEL_BIN        = kernel8.img
     QEMU_BINARY       = qemu-system-aarch64
-    QEMU_CPU          = cortex-a72
+    QEMU_CPU          = cortex-a53
     QEMU_RELEASE_ARGS = -serial stdio -display none
     QEMU_TEST_ARGS    = $(QEMU_RELEASE_ARGS) -semihosting
     OBJDUMP_BINARY    = aarch64-none-elf-objdump
@@ -176,7 +176,7 @@ endif
 ##--------------------------------------------------------------------------------------------------
 .PHONY: all doc qemu chainboot clippy clean readelf objdump nm check
 
-all: build_kernel_bin
+all: $(KERNEL_BIN)
 
 ##------------------------------------------------------------------------------
 ## Save the configuration as a file, so make understands if it changed.
@@ -211,7 +211,7 @@ $(KERNEL_ELF_TTABLES_SYMS): $(KERNEL_ELF_TTABLES_SYMS_DEPS)
 ##------------------------------------------------------------------------------
 ## Generate the stripped kernel binary
 ##------------------------------------------------------------------------------
-build_kernel_bin: $(KERNEL_ELF_TTABLES_SYMS)
+$(KERNEL_BIN): $(KERNEL_ELF_TTABLES_SYMS)
 	$(call color_header, "Generating stripped binary")
 	@$(OBJCOPY_CMD) $(KERNEL_ELF_TTABLES_SYMS) $(KERNEL_BIN)
 	$(call color_progress_prefix, "Name")
@@ -236,9 +236,8 @@ doc: clean
 
 # else # QEMU is supported.
 
-qemu: build_kernel_bin
+qemu: $(KERNEL_BIN)
 	$(call color_header, "Launching QEMU")
-    $(call color_subheader, "=> $(DOCKER_QEMU) $(EXEC_QEMU) $(QEMU_RELEASE_ARGS) -kernel $(KERNEL_BIN)")
     @$(DOCKER_QEMU) $(EXEC_QEMU) $(QEMU_RELEASE_ARGS) -kernel $(KERNEL_BIN)
 
 # endif
@@ -246,7 +245,7 @@ qemu: build_kernel_bin
 ##------------------------------------------------------------------------------
 ## Push the kernel to the real HW target
 ##------------------------------------------------------------------------------
-chainboot: build_kernel_bin
+chainboot: $(KERNEL_BIN)
 	@$(DOCKER_CHAINBOOT) $(EXEC_MINIPUSH) $(DEV_SERIAL) $(KERNEL_BIN)
 
 ##------------------------------------------------------------------------------
@@ -334,7 +333,7 @@ test_unit test_integration: FEATURES += --features test_build
 ##------------------------------------------------------------------------------
 ## Run boot test
 ##------------------------------------------------------------------------------
-test_boot: build_kernel_bin
+test_boot: $(KERNEL_BIN)
 	$(call color_header, "Boot test - $(BSP)")
 	@$(DOCKER_TEST) $(EXEC_TEST_DISPATCH) $(EXEC_QEMU) $(QEMU_RELEASE_ARGS) -kernel $(KERNEL_BIN)
 

@@ -1,19 +1,11 @@
-package main
-
-import (
-	"github.com/RedstoneWizard08/kernel/tools/builder/clean"
-	"github.com/alexflint/go-arg"
-)
+package tasks
 
 type LogOptions struct {
-	LogFile string `arg:"--log-file" help:"The file to log messages to. Useful for some CI workflows."`
-	Verbose bool   `arg:"-v, --verbose" help:"Show verbose logging messages." default:"false"`
+	Verbose bool `arg:"-v, --verbose" help:"Show verbose logging messages." default:"false"`
 }
 
 type BuildCmd struct {
-	Docker  bool   `arg:"-d, --docker" help:"Build for docker." default:"false"`
-	Targets string `arg:"-t, --targets" help:"A comma-separated list of the targets to build. [all | kernel | symbols]" default:"all"`
-	Clean   bool   `arg:"-c, --clean" help:"Whether to clean the build output." default:"false"`
+	Clean bool `arg:"-c, --clean" help:"Whether to clean the build output." default:"false"`
 }
 
 type CleanCmd struct{}
@@ -42,7 +34,7 @@ type TestCmd struct {
 
 type DocCmd struct{}
 
-type args struct {
+type Arguments struct {
 	Version bool `arg:"-V, --version" help:"Print the version and exit." default:"false"`
 
 	Build *BuildCmd `arg:"subcommand:build"`
@@ -55,18 +47,6 @@ type args struct {
 	LogOptions
 }
 
-func (args) Description() string {
+func (Arguments) Description() string {
 	return "== A build utility for the DESK kernel. =="
-}
-
-func main() {
-	var args args
-
-	arg.MustParse(&args)
-
-	switch {
-	case args.Clean != nil:
-		clean.Setup()
-		clean.Clean()
-	}
 }
