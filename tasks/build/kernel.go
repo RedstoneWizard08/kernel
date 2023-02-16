@@ -21,6 +21,8 @@ func BuildKernelBin(config BuildConfig, args tasks.Arguments) {
 
 	cmd.Env = os.Environ()
 	cmd.Env = append(cmd.Env, "RUSTFLAGS="+strings.Join(config.RustFlags, " "))
+	cmd.Env = append(cmd.Env, "LD_SCRIPT_PATH="+config.LdScriptPath)
+	cmd.Env = append(cmd.Env, "KERNEL_SYMBOLS_DEMANGLED_RS="+config.KernelSymbolsElf+"_demangled.rs")
 
 	if args.Verbose {
 		cmd.Stdout = os.Stdout
@@ -41,6 +43,8 @@ func BuildKernelImg(config BuildConfig, args tasks.Arguments) {
 	cmd := exec.Command("ruby", tasks.ResolveRoot("tools/kernel_symbols_tool/main.rb"), "--patch_data", config.KernelElfTTablesSyms, config.KernelSymbolsElf+"_stripped")
 
 	cmd.Env = os.Environ()
+	cmd.Env = append(cmd.Env, "LD_SCRIPT_PATH="+config.LdScriptPath)
+	cmd.Env = append(cmd.Env, "KERNEL_SYMBOLS_DEMANGLED_RS="+config.KernelSymbolsElf+"_demangled.rs")
 
 	if args.Verbose {
 		cmd.Stdout = os.Stdout
@@ -59,6 +63,8 @@ func BuildKernelImg(config BuildConfig, args tasks.Arguments) {
 	cmd = exec.Command(config.ObjCopy, "--strip-all", "-O", "binary", config.KernelElfTTablesSyms, config.KernelBin)
 
 	cmd.Env = os.Environ()
+	cmd.Env = append(cmd.Env, "LD_SCRIPT_PATH="+config.LdScriptPath)
+	cmd.Env = append(cmd.Env, "KERNEL_SYMBOLS_DEMANGLED_RS="+config.KernelSymbolsElf+"_demangled.rs")
 
 	if args.Verbose {
 		cmd.Stdout = os.Stdout

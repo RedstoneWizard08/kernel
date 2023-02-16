@@ -2,3 +2,6 @@ build
 !tasks/build
 target
 kernel8.img
+log.*
+*.log
+*.img

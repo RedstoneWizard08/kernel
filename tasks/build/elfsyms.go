@@ -58,6 +58,8 @@ func BuildKernelSymbols(config BuildConfig, args tasks.Arguments) {
 	cmd := exec.Command("bash", "-c", cmd_str)
 
 	cmd.Env = os.Environ()
+	cmd.Env = append(cmd.Env, "LD_SCRIPT_PATH="+config.LdScriptPath)
+	cmd.Env = append(cmd.Env, "KERNEL_SYMBOLS_DEMANGLED_RS="+config.KernelSymbolsElf+"_demangled.rs")
 
 	if args.Verbose {
 		cmd.Stdout = os.Stdout
@@ -77,13 +79,15 @@ func BuildKernelSymbols(config BuildConfig, args tasks.Arguments) {
 
 	symsLogger.Log("[7/8] Building demangled symbols...")
 
-	BuildDemangledSymbols(config.KernelSymbolsLinkerScript, vaddr, config.Target, config.KernelSymbolsManifest, args)
+	BuildDemangledSymbols(config.KernelSymbolsLinkerScript, vaddr, config.Target, config.KernelSymbolsManifest, args, config)
 
 	symsLogger.Log("[8/8] Stripping symbols ELF...")
 
 	cmd = exec.Command(config.ObjCopy, "--strip-all", "-O", "binary", config.KernelSymbolsElf, config.KernelSymbolsElf+"_stripped")
 
 	cmd.Env = os.Environ()
+	cmd.Env = append(cmd.Env, "LD_SCRIPT_PATH="+config.LdScriptPath)
+	cmd.Env = append(cmd.Env, "KERNEL_SYMBOLS_DEMANGLED_RS="+config.KernelSymbolsElf+"_demangled.rs")
 
 	if args.Verbose {
 		cmd.Stdout = os.Stdout
@@ -98,13 +102,15 @@ func BuildKernelSymbols(config BuildConfig, args tasks.Arguments) {
 	}
 }
 
-func BuildDemangledSymbols(linkerScript string, virtualAddress string, target string, manifest string, args tasks.Arguments) {
+func BuildDemangledSymbols(linkerScript string, virtualAddress string, target string, manifest string, args tasks.Arguments, config BuildConfig) {
 	symsLogger.Log("[1/1] [Build Demangled Symbols] Building demangled symbols...")
 
 	cmd := exec.Command("cargo", "rustc", "--target="+target, "--release", "--manifest-path", manifest)
 
 	cmd.Env = os.Environ()
 	cmd.Env = append(cmd.Env, "RUSTFLAGS=-C link-arg=--script="+linkerScript+" -C link-arg=--section-start=.rodata="+virtualAddress)
+	cmd.Env = append(cmd.Env, "LD_SCRIPT_PATH="+config.LdScriptPath)
+	cmd.Env = append(cmd.Env, "KERNEL_SYMBOLS_DEMANGLED_RS="+config.KernelSymbolsElf+"_demangled.rs")
 
 	if args.Verbose {
 		cmd.Stdout = os.Stdout
