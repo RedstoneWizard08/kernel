@@ -7,5 +7,7 @@ func Setup() [6]string {
 }
 
 func Run() error {
+	// QEMU: qemu-system-aarch64 -M virt,highmem=off -smp 8 -m 2G -cpu $(TargetCPU) -serial stdio -display none -kernel $(KernelBin)
+
 	return nil
 }
