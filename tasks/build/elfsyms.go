@@ -11,7 +11,7 @@ import (
 
 var symsLogger tasks.Logger = tasks.NewLogger("Debug Symbols", *color.New(color.FgBlue), *color.New(color.Reset))
 
-func BuildKernelSymbols(config BuildConfig, args tasks.Arguments) {
+func BuildKernelSymbols(config tasks.Config, args tasks.Arguments) {
 	symsLogger.Log("[1/8] Copying raw ELF...")
 
 	data, err := os.ReadFile(config.RawKernelElf)
@@ -102,7 +102,7 @@ func BuildKernelSymbols(config BuildConfig, args tasks.Arguments) {
 	}
 }
 
-func BuildDemangledSymbols(linkerScript string, virtualAddress string, target string, manifest string, args tasks.Arguments, config BuildConfig) {
+func BuildDemangledSymbols(linkerScript string, virtualAddress string, target string, manifest string, args tasks.Arguments, config tasks.Config) {
 	symsLogger.Log("[1/1] [Build Demangled Symbols] Building demangled symbols...")
 
 	cmd := exec.Command("cargo", "rustc", "--target="+target, "--release", "--manifest-path", manifest)

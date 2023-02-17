@@ -1,10 +1,8 @@
-package build
+package tasks
 
 import (
 	"fmt"
 	"runtime"
-
-	"github.com/RedstoneWizard08/kernel/tasks"
 )
 
 type CPU string
@@ -23,10 +21,11 @@ const (
 	Rpi4 BSP = "rpi4"
 )
 
-type BuildConfig struct {
+type Config struct {
 	CargoArgs []string
 	RustcArgs []string
 	RustFlags []string
+	TestArgs  []string
 
 	TargetCPU CPU
 	Target    string
@@ -51,21 +50,21 @@ type BuildConfig struct {
 	Readelf string
 }
 
-func DefaultConfig() BuildConfig {
+func DefaultConfig() Config {
 	DefaultTarget := "aarch64-unknown-none-softfloat"
 	DefaultCPU := CortexA72
-	DefaultLdScriptPath := tasks.ResolveRoot("kernel/src/bsp/raspberrypi")
+	DefaultLdScriptPath := ResolveRoot("kernel/src/bsp/raspberrypi")
 	DefaultBSP := Rpi4
-	DefaultKernelManifest := tasks.ResolveRoot("kernel/Cargo.toml")
-	DefaultKernelSymbolsManifest := tasks.ResolveRoot("kernel_symbols/Cargo.toml")
+	DefaultKernelManifest := ResolveRoot("kernel/Cargo.toml")
+	DefaultKernelSymbolsManifest := ResolveRoot("kernel_symbols/Cargo.toml")
 	DefaultKernelLinkerScript := "kernel.ld"
 	DefaultKernelSymbolsLinkerScript := "kernel_symbols/kernel_symbols.ld"
-	DefaultKernelSymbolsElf := tasks.ResolveRoot(fmt.Sprintf("target/%s/release/kernel_symbols", DefaultTarget))
-	DefaultRawKernelElf := tasks.ResolveRoot(fmt.Sprintf("target/%s/release/kernel", DefaultTarget))
-	DefaultKernelElfTTables := tasks.ResolveRoot(fmt.Sprintf("target/%s/release/kernel+ttables", DefaultTarget))
-	DefaultKernelElfTTablesSyms := tasks.ResolveRoot(fmt.Sprintf("target/%s/release/kernel+ttables+symbols", DefaultTarget))
+	DefaultKernelSymbolsElf := ResolveRoot(fmt.Sprintf("target/%s/release/kernel_symbols", DefaultTarget))
+	DefaultRawKernelElf := ResolveRoot(fmt.Sprintf("target/%s/release/kernel", DefaultTarget))
+	DefaultKernelElfTTables := ResolveRoot(fmt.Sprintf("target/%s/release/kernel+ttables", DefaultTarget))
+	DefaultKernelElfTTablesSyms := ResolveRoot(fmt.Sprintf("target/%s/release/kernel+ttables+symbols", DefaultTarget))
 	DefaultReadelfCommand := "aarch64-none-elf-readelf"
-	DefaultKernelBin := tasks.ResolveRoot("kernel8.img")
+	DefaultKernelBin := ResolveRoot("kernel8.img")
 
 	if runtime.GOARCH == "arm64" {
 		DefaultReadelfCommand = "readelf"
@@ -98,7 +97,18 @@ func DefaultConfig() BuildConfig {
 
 	DefaultRustcArgs := append(DefaultCargoArgs, dRustcArgs...)
 
-	return BuildConfig{
+	DefaultTestArgs := []string{
+		"--target=" + DefaultTarget,
+		"--features",
+		"bsp_" + string(DefaultBSP) + ",test_build",
+		"--release",
+		"-Z",
+		"build-std=core,alloc",
+		"--manifest-path",
+		DefaultKernelManifest,
+	}
+
+	return Config{
 		CargoArgs:                 DefaultCargoArgs,
 		RustFlags:                 DefaultRustFlags,
 		RustcArgs:                 DefaultRustcArgs,
@@ -120,5 +130,6 @@ func DefaultConfig() BuildConfig {
 		KernelSymbolsLinkerScript: DefaultKernelSymbolsLinkerScript,
 		KernelSymbolsManifest:     DefaultKernelSymbolsManifest,
 		KernelSymbolsElf:          DefaultKernelSymbolsElf,
+		TestArgs:                  DefaultTestArgs,
 	}
 }

@@ -12,6 +12,9 @@ clean:
 build:
 	go run . build -v
 
+test:
+	go run . test -v
+
 run:
 	@echo "Run: $(QEMU_CMD)"
 	@$(QEMU_CMD)

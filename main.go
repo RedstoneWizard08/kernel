@@ -28,6 +28,6 @@ func main() {
 	case args.Run != nil:
 		run.Run()
 	case args.Test != nil:
-		test.Test()
+		test.Test(args)
 	}
 }

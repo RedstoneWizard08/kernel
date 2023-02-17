@@ -12,7 +12,18 @@ import (
 
 var kernelLogger tasks.Logger = tasks.NewLogger("Kernel Build", *color.New(color.FgBlue), *color.New(color.Reset))
 
-func BuildKernelBin(config BuildConfig, args tasks.Arguments) {
+func BuildKernelBin(config tasks.Config, args tasks.Arguments) {
+	kernelLogger.Log("[1/1] [Deps] Building kernel dependencies...")
+
+	deps := []string{}
+	depInfoB, err := os.ReadFile(config.RawKernelElf + ".d")
+
+	if err == nil {
+		deps = strings.Split(strings.Split(string(depInfoB), ": ")[1], " ")
+	}
+
+	deps = append(deps, config.KernelManifest)
+
 	kernelLogger.Log("[1/1] [Bin] Building the kernel...")
 
 	commandArgs := append([]string{"rustc"}, config.RustcArgs...)
@@ -29,7 +40,7 @@ func BuildKernelBin(config BuildConfig, args tasks.Arguments) {
 		cmd.Stderr = os.Stderr
 	}
 
-	err := cmd.Run()
+	err = cmd.Run()
 
 	if err != nil {
 		kernelLogger.Log("[1/1] [Bin] >> ERROR << Could not compile the kernel!")
@@ -37,7 +48,7 @@ func BuildKernelBin(config BuildConfig, args tasks.Arguments) {
 	}
 }
 
-func BuildKernelImg(config BuildConfig, args tasks.Arguments) {
+func BuildKernelImg(config tasks.Config, args tasks.Arguments) {
 	kernelLogger.Log("[1/2] [Image] Patching final ELF...")
 
 	cmd := exec.Command("ruby", tasks.ResolveRoot("tools/kernel_symbols_tool/main.rb"), "--patch_data", config.KernelElfTTablesSyms, config.KernelSymbolsElf+"_stripped")
@@ -79,7 +90,7 @@ func BuildKernelImg(config BuildConfig, args tasks.Arguments) {
 	}
 }
 
-func BuildKernel(config BuildConfig, args tasks.Arguments) {
+func BuildKernel(config tasks.Config, args tasks.Arguments) {
 	if args.Build.Clean {
 		kernelLogger.Log("[Pre-build] Cleaning...")
 

@@ -10,10 +10,10 @@ import (
 
 var toolsLogger tasks.Logger = tasks.NewLogger("Build Utils", *color.New(color.FgBlue), *color.New(color.Reset))
 
-func GenerateTranslationTables(target BSP, elfPath string, verbose bool) {
+func GenerateTranslationTables(target tasks.BSP, elfPath string, verbose bool) {
 	toolsLogger.Log("[1/1] [Translation Tables] Generating translation tables from ELF...")
 
-	if target != Rpi3 && target != Rpi4 {
+	if target != tasks.Rpi3 && target != tasks.Rpi4 {
 		toolsLogger.Log("[1/1] [Translation Tables] >> ERROR << Invalid BSP target!")
 		os.Exit(1)
 	}
