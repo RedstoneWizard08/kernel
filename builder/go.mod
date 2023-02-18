@@ -1,6 +1,6 @@
-module github.com/RedstoneWizard08/kernel
+module github.com/RedstoneWizard08/kernel/builder
 
-go 1.19
+go 1.18
 
 require (
 	github.com/alexflint/go-arg v1.4.3

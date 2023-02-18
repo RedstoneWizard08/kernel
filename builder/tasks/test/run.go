@@ -5,7 +5,7 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/RedstoneWizard08/kernel/tasks"
+	"github.com/RedstoneWizard08/kernel/builder/tasks"
 	"github.com/fatih/color"
 )
 
