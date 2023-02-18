@@ -13,17 +13,6 @@ import (
 var kernelLogger tasks.Logger = tasks.NewLogger("Kernel Build", *color.New(color.FgBlue), *color.New(color.Reset))
 
 func BuildKernelBin(config tasks.Config, args tasks.Arguments) {
-	kernelLogger.Log("[1/1] [Deps] Building kernel dependencies...")
-
-	deps := []string{}
-	depInfoB, err := os.ReadFile(config.RawKernelElf + ".d")
-
-	if err == nil {
-		deps = strings.Split(strings.Split(string(depInfoB), ": ")[1], " ")
-	}
-
-	deps = append(deps, config.KernelManifest)
-
 	kernelLogger.Log("[1/1] [Bin] Building the kernel...")
 
 	commandArgs := append([]string{"rustc"}, config.RustcArgs...)
@@ -40,7 +29,7 @@ func BuildKernelBin(config tasks.Config, args tasks.Arguments) {
 		cmd.Stderr = os.Stderr
 	}
 
-	err = cmd.Run()
+	err := cmd.Run()
 
 	if err != nil {
 		kernelLogger.Log("[1/1] [Bin] >> ERROR << Could not compile the kernel!")
@@ -51,7 +40,7 @@ func BuildKernelBin(config tasks.Config, args tasks.Arguments) {
 func BuildKernelImg(config tasks.Config, args tasks.Arguments) {
 	kernelLogger.Log("[1/2] [Image] Patching final ELF...")
 
-	cmd := exec.Command("ruby", tasks.ResolveRoot("tools/kernel_symbols_tool/main.rb"), "--patch_data", config.KernelElfTTablesSyms, config.KernelSymbolsElf+"_stripped")
+	cmd := exec.Command(config.ObjCopy, "--strip-all", "-O", "binary", config.RawKernelElf+"_symbols", config.RawKernelElf+"_symbols_stripped")
 
 	cmd.Env = os.Environ()
 	cmd.Env = append(cmd.Env, "LD_SCRIPT_PATH="+config.LdScriptPath)
@@ -66,6 +55,26 @@ func BuildKernelImg(config tasks.Config, args tasks.Arguments) {
 
 	if err != nil {
 		kernelLogger.Log("[1/2] [Image] >> ERROR << Unable to patch final ELF!")
+		os.Exit(1)
+	}
+
+	kernelLogger.Log("[2/2] [Image] Patching final ELF...")
+
+	cmd = exec.Command("ruby", tasks.ResolveRoot("tools/kernel_symbols_tool/main.rb"), "--patch_data", config.KernelElfTTablesSyms, config.RawKernelElf+"_symbols_stripped")
+
+	cmd.Env = os.Environ()
+	cmd.Env = append(cmd.Env, "LD_SCRIPT_PATH="+config.LdScriptPath)
+	cmd.Env = append(cmd.Env, "KERNEL_SYMBOLS_DEMANGLED_RS="+config.KernelSymbolsElf+"_demangled.rs")
+
+	if args.Verbose {
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+	}
+
+	err = cmd.Run()
+
+	if err != nil {
+		kernelLogger.Log("[2/2] [Image] >> ERROR << Unable to patch final ELF!")
 		os.Exit(1)
 	}
 

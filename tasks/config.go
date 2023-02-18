@@ -100,7 +100,7 @@ func DefaultConfig() Config {
 	DefaultTestArgs := []string{
 		"--target=" + DefaultTarget,
 		"--features",
-		"bsp_" + string(DefaultBSP) + ",test_build",
+		"bsp_" + string(DefaultBSP),
 		"--release",
 		"-Z",
 		"build-std=core,alloc",

@@ -84,22 +84,22 @@ DOCKER_TOOLS = $(DOCKER_CMD) $(DOCKER_IMAGE)
 all: measure_time_start symbols measure_time_finish
 
 symbols:
-	@cp $(KERNEL_SYMBOLS_INPUT_ELF) $(KERNEL_SYMBOLS_OUTPUT_ELF)
+	cp $(KERNEL_SYMBOLS_INPUT_ELF) $(KERNEL_SYMBOLS_OUTPUT_ELF)
 
-	@$(DOCKER_TOOLS) $(EXEC_SYMBOLS_TOOL) --gen_symbols $(KERNEL_SYMBOLS_OUTPUT_ELF) \
+	$(DOCKER_TOOLS) $(EXEC_SYMBOLS_TOOL) --gen_symbols $(KERNEL_SYMBOLS_OUTPUT_ELF) \
                 $(KERNEL_SYMBOLS_RS)
 
 	$(call color_progress_prefix, "Demangling")
-	@echo Symbol names
-	@cat $(KERNEL_SYMBOLS_RS) | rustfilt > $(KERNEL_SYMBOLS_DEMANGLED_RS)
+	echo Symbol names
+	cat $(KERNEL_SYMBOLS_RS) | rustfilt > $(KERNEL_SYMBOLS_DEMANGLED_RS)
 
-	@RUSTFLAGS="$(RUSTFLAGS_PEDANTIC)" $(RUSTC_CMD)
+	RUSTFLAGS="$(RUSTFLAGS_PEDANTIC)" $(RUSTC_CMD)
 
 	$(call color_progress_prefix, "Stripping")
-	@echo Symbols ELF file
-	@$(OBJCOPY_CMD) $(KERNEL_SYMBOLS_ELF) $(KERNEL_SYMBOLS_STRIPPED)
+	echo Symbols ELF file
+	$(OBJCOPY_CMD) $(KERNEL_SYMBOLS_ELF) $(KERNEL_SYMBOLS_STRIPPED)
 
-	@$(DOCKER_TOOLS) $(EXEC_SYMBOLS_TOOL) --patch_data $(KERNEL_SYMBOLS_OUTPUT_ELF) \
+	$(DOCKER_TOOLS) $(EXEC_SYMBOLS_TOOL) --patch_data $(KERNEL_SYMBOLS_OUTPUT_ELF) \
                 $(KERNEL_SYMBOLS_STRIPPED)
 
 # Note: The following is the only _trivial_ way I could think of that works out of the box on both
