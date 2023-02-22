@@ -5,3 +5,5 @@ kernel8.img
 log.*
 *.log
 *.img
+docker_
+!gobuilder/tasks/build

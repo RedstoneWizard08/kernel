@@ -39,7 +39,7 @@ ifeq ($(BSP),rpi3)
     TARGET            = aarch64-unknown-none-softfloat
     KERNEL_BIN        = kernel8.img
     QEMU_BINARY       = qemu-system-aarch64
-    QEMU_MACHINE_TYPE = raspi3
+    QEMU_MACHINE_TYPE = cortex-a53
     QEMU_RELEASE_ARGS = -serial stdio -display none
     QEMU_TEST_ARGS    = $(QEMU_RELEASE_ARGS) -semihosting
     OBJDUMP_BINARY    = aarch64-none-elf-objdump
@@ -53,7 +53,7 @@ else ifeq ($(BSP),rpi4)
     TARGET            = aarch64-unknown-none-softfloat
     KERNEL_BIN        = kernel8.img
     QEMU_BINARY       = qemu-system-aarch64
-    QEMU_MACHINE_TYPE =
+    QEMU_MACHINE_TYPE = cortex-a72
     QEMU_RELEASE_ARGS = -serial stdio -display none
     QEMU_TEST_ARGS    = $(QEMU_RELEASE_ARGS) -semihosting
     OBJDUMP_BINARY    = aarch64-none-elf-objdump
@@ -137,7 +137,7 @@ OBJCOPY_CMD = rust-objcopy \
     --strip-all            \
     -O binary
 
-EXEC_QEMU          = $(QEMU_BINARY) -M $(QEMU_MACHINE_TYPE)
+EXEC_QEMU          = $(QEMU_BINARY) -M virt,highmem=off -smp 8 -m 2G -cpu $(QEMU_MACHINE_TYPE)
 EXEC_TT_TOOL       = ruby $(TT_TOOL_PATH)/main.rb
 EXEC_TEST_DISPATCH = ruby ../common/tests/dispatch.rb
 EXEC_MINIPUSH      = ruby ../common/serial/minipush.rb

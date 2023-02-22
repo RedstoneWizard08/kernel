@@ -10,7 +10,7 @@
 //! - <https://doc.rust-lang.org/stable/std/panic/fn.set_hook.html>
 
 #[cfg(target_arch = "aarch64")]
-#[path = "_arch/aarch64/time.rs"]
+#[path = "arch/aarch64/time.rs"]
 mod arch_time;
 
 use crate::{

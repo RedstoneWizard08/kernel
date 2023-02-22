@@ -11,7 +11,7 @@ include make/operating_system.mk
 ##--------------------------------------------------------------------------------------------------
 
 # Default to the RPi3.
-BSP ?= rpi4
+BSP ?= rpi3
 
 # Default to a serial device name that is common in Linux.
 DEV_SERIAL ?= /dev/ttyUSB0
@@ -238,7 +238,7 @@ doc: clean
 
 qemu: $(KERNEL_BIN)
 	$(call color_header, "Launching QEMU")
-    @$(DOCKER_QEMU) $(EXEC_QEMU) $(QEMU_RELEASE_ARGS) -kernel $(KERNEL_BIN)
+	@$(DOCKER_QEMU) $(EXEC_QEMU) $(QEMU_RELEASE_ARGS) -kernel $(KERNEL_BIN)
 
 # endif
 

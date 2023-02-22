@@ -9,18 +9,18 @@ BuilderCmd = builder/build/builder.$(BUILDER_ARCH)
 
 all: build
 
-clean: _builder_build
+clean:
 	@$(BuilderCmd) clean -v
 
-build: _builder_build
+build:
 	@$(BuilderCmd) build -v
 
-test: _builder_build
+test:
 	@$(BuilderCmd) test -v
 
 run:
 	@echo "Run: $(QEMU_CMD)"
 	@$(QEMU_CMD)
 
-_builder_build:
+builder:
 	@make -C builder

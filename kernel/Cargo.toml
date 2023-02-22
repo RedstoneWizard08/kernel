@@ -5,7 +5,7 @@ authors = ["Andre Richter <andre.o.richter@gmail.com>"]
 edition = "2021"
 
 [features]
-default = []
+default = ["bsp_rpi4", "test_build"]
 debug_prints = []
 bsp_rpi3 = ["tock-registers"]
 bsp_rpi4 = ["tock-registers"]

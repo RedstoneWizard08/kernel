@@ -5,7 +5,7 @@
 //! Asynchronous exception handling.
 
 #[cfg(target_arch = "aarch64")]
-#[path = "../_arch/aarch64/exception/asynchronous.rs"]
+#[path = "../arch/aarch64/exception/asynchronous.rs"]
 mod arch_asynchronous;
 mod null_irq_manager;
 

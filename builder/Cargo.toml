@@ -1,0 +1,11 @@
+[package]
+name = "builder"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+bollard = { version = "0.14.0", features = ["num", "rand", "ssl", "time", "buildkit", "ct-logs"] }
+clap = { version = "4.1.6", features = ["derive", "string", "env"] }
+tokio = { version = "1.25.0", features = ["full", "windows-sys"] }
