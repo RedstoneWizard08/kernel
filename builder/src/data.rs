@@ -13,10 +13,10 @@ pub enum CheckTarget {
 #[command(propagate_version = true)]
 pub struct Cli {
     #[command(subcommand)]
-    command: Commands,
+    pub command: Commands,
 
     #[arg(short, long, default_value_t = false, help = "Enable verbose logging.")]
-    verbose: bool,
+    pub verbose: bool,
 }
 
 #[derive(Subcommand)]
