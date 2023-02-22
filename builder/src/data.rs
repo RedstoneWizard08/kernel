@@ -23,7 +23,12 @@ pub struct Cli {
 pub enum Commands {
     #[command(about = "Build the kernel.")]
     Build {
-        #[arg(short, long, default_value_t = false, help = "Cleans the build output before building.")]
+        #[arg(
+            short,
+            long,
+            default_value_t = false,
+            help = "Cleans the build output before building."
+        )]
         clean: bool,
 
         #[arg(short, long, default_value_t = false, help = "Enable verbose logging.")]
@@ -47,7 +52,12 @@ pub enum Commands {
 
     #[command(about = "Tests the kernel.")]
     Test {
-        #[arg(short, long, default_value_t = false, help = "Cleans the build output before building.")]
+        #[arg(
+            short,
+            long,
+            default_value_t = false,
+            help = "Cleans the build output before building."
+        )]
         clean: bool,
 
         #[arg(short, long, default_value_t = false, help = "Runs all tests.")]
@@ -59,7 +69,12 @@ pub enum Commands {
         #[arg(short, long, default_value_t = false, help = "Runs only boot tests.")]
         boot: bool,
 
-        #[arg(short, long, default_value_t = false, help = "Runs only integration tests.")]
+        #[arg(
+            short,
+            long,
+            default_value_t = false,
+            help = "Runs only integration tests."
+        )]
         integration: bool,
 
         #[arg(short, long, default_value_t = false, help = "Enable verbose logging.")]
@@ -68,7 +83,12 @@ pub enum Commands {
 
     #[command(about = "Runs the kernel in QEMU.")]
     Run {
-        #[arg(short, long, default_value_t = false, help = "Cleans the build output before building.")]
+        #[arg(
+            short,
+            long,
+            default_value_t = false,
+            help = "Cleans the build output before building."
+        )]
         clean: bool,
 
         #[arg(short, long, default_value_t = false, help = "Enable verbose logging.")]
@@ -77,13 +97,23 @@ pub enum Commands {
 
     #[command(about = "Runs debug scripts on the kernel.")]
     Debug {
-        #[arg(short, long, default_value_t = false, help = "Cleans the build output before building.")]
+        #[arg(
+            short,
+            long,
+            default_value_t = false,
+            help = "Cleans the build output before building."
+        )]
         clean: bool,
 
         #[arg(short, long, default_value_t = true, help = "Uses GDB for debugging.")]
         gdb: bool,
 
-        #[arg(short, long, default_value_t = false, help = "Uses OpenOCD for debugging.")]
+        #[arg(
+            short,
+            long,
+            default_value_t = false,
+            help = "Uses OpenOCD for debugging."
+        )]
         openocd: bool,
 
         #[arg(short, long, default_value_t = false, help = "Enable verbose logging.")]

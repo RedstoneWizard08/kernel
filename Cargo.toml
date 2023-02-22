@@ -1,8 +1,8 @@
 [workspace]
 members = [
-        # "libraries/*",
-        # "kernel",
-        # "kernel_symbols",
+        "libraries/*",
+        "kernel",
+        "kernel_symbols",
         "builder"
 ]
 

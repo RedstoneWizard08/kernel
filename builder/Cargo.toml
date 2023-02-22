@@ -8,4 +8,9 @@ edition = "2021"
 [dependencies]
 bollard = { version = "0.14.0", features = ["num", "rand", "ssl", "time", "buildkit", "ct-logs"] }
 clap = { version = "4.1.6", features = ["derive", "string", "env"] }
+futures = "0.3.26"
+futures-core = "0.3.26"
+futures-util = { version = "0.3.26", features = ["io", "channel", "tokio-io", "compat", "io-compat"] }
 tokio = { version = "1.25.0", features = ["full", "windows-sys"] }
+tokio-stream = { version = "0.1.12", features = ["tokio-util", "signal", "net", "fs", "io-util"] }
+tokio-util = { version = "0.7.7", features = ["full"] }
