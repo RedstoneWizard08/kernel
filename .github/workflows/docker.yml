@@ -27,7 +27,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: builder
-          file: ./builder/Dockerfile
+          file: ./Dockerfile
           push: true
           tags: redstonewizard/kernel-builder:latest
           platforms: linux/amd64,linux/arm64
