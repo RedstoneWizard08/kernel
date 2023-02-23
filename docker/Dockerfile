@@ -59,6 +59,12 @@ RUN wget https://sh.rustup.rs -O rustup.sh
 RUN bash rustup.sh --default-toolchain nightly --profile complete --target aarch64-unknown-none-softfloat --component rust-src -y
 RUN rm rustup.sh
 
+# Tools
+RUN ln -sf ~/.cargo/bin/cargo /usr/local/bin/cargo
+RUN ln -sf ~/.cargo/bin/rustc /usr/local/bin/rustc
+RUN cargo install cargo-binutils rustfilt
+RUN ln -sf ~/.cargo/bin/rust-objcopy /usr/local/bin/rust-objcopy
+
 # Cleanup
 RUN apt-get -y autoremove
 RUN apt-get -y clean

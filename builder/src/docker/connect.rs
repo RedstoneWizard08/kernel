@@ -1,7 +1,6 @@
-use std::path::Path;
+use std::{env::var, path::Path};
 
 use bollard::{errors::Error, Docker};
-use std::env::var;
 
 pub fn connect(socket: bool) -> Result<Docker, Error> {
     if socket {

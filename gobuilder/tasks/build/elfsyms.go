@@ -105,6 +105,7 @@ func BuildKernelSymbols(config tasks.Config, args tasks.Arguments, ctx context.C
 }
 
 func BuildDemangledSymbols(linkerScript string, virtualAddress string, target string, manifest string, args tasks.Arguments, config tasks.Config) {
+	// BuildDemangledSymbols(config.KernelSymbolsLinkerScript, vaddr, config.Target, config.KernelSymbolsManifest, args, config)
 	symsLogger.Log("[1/1] [Build Demangled Symbols] Building demangled symbols...")
 
 	cmd := exec.Command("cargo", "rustc", "--target="+target, "--release", "--manifest-path", manifest)
