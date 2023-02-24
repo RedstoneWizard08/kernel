@@ -1,4 +1,5 @@
 build
+!builder/src/commands/build
 !builder/tasks/build
 target
 kernel8.img

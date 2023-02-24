@@ -1,10 +1,11 @@
+pub const DEFAULT_FINAL_BINARY: &'static str = "kernel8.img";
 pub const DEFAULT_CPU: &'static str = "cortex-a72";
-pub const DEFAULT_LD_SCRIPT_PATH: &'static str = "/work/kernel/src/bsp/aarch64";
+pub const DEFAULT_LD_SCRIPT_PATH: &'static str = "kernel/src/bsp/aarch64";
 pub const DEFAULT_KERNEL_LINKER_SCRIPT: &'static str = "kernel.ld";
 pub const DEFAULT_KERNEL_SYMBOLS_LINKER_SCRIPT: &'static str = "kernel_symbols/kernel_symbols.ld";
 pub const DEFAULT_TARGET: &'static str = "aarch64-unknown-none-softfloat";
-pub const DEFAULT_KERNEL_MANIFEST: &'static str = "/work/kernel/Cargo.toml";
-pub const DEFAULT_KERNEL_SYMBOLS_MANIFEST: &'static str = "/work/kernel_symbols/Cargo.toml";
+pub const DEFAULT_KERNEL_MANIFEST: &'static str = "kernel/Cargo.toml";
+pub const DEFAULT_KERNEL_SYMBOLS_MANIFEST: &'static str = "kernel_symbols/Cargo.toml";
 pub const DEFAULT_IMAGE: &'static str = "docker.io/redstonewizard/kernel-builder:latest";
 pub const DEFAULT_BSP: &'static str = "rpi4";
 
@@ -28,7 +29,7 @@ pub fn generate_rust_flags() -> String {
     flags.push("-C".to_string());
     flags.push("force-frame-pointers".to_string());
     flags.push("-C".to_string());
-    flags.push("link-arg=--library-path=".to_string() + DEFAULT_LD_SCRIPT_PATH);
+    flags.push("link-arg=--library-path=/work/".to_string() + DEFAULT_LD_SCRIPT_PATH);
     flags.push("-C".to_string());
     flags.push("link-arg=--script=".to_string() + DEFAULT_KERNEL_LINKER_SCRIPT);
 
@@ -58,6 +59,7 @@ pub struct BuildConfig {
     pub elf_ttables_symbols: String,
     pub bsp: String,
     pub kernel_symbols_manifest: String,
+    pub final_binary: String,
 }
 
 impl Default for BuildConfig {
@@ -74,6 +76,7 @@ impl Default for BuildConfig {
             elf_ttables_symbols: DEFAULT_ELF_TTABLES_SYMBOLS.to_string(),
             bsp: DEFAULT_BSP.to_string(),
             kernel_symbols_manifest: DEFAULT_KERNEL_SYMBOLS_MANIFEST.to_string(),
+            final_binary: DEFAULT_FINAL_BINARY.to_string(),
         };
     }
 }
